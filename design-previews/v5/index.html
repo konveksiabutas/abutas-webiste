@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ABUTAS — Konveksi Tas & Pakaian Custom untuk Kebutuhan Bisnis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <style>
+    /* =============================================================
+       ABUTAS DESIGN SYSTEM — CREATIVE MANUFACTURING STUDIO
+       Aligned 1:1 with Official Master Visual Mockup
+       ============================================================= */
+    :root {
+      --bg-cream: #F8F6F0;
+      --bg-surface: #FFFFFF;
+      --bg-dark: #121517;
+      --bg-darker: #0E1112;
+      --bg-card-dark: #1A1E20;
+      
+      --text-main: #14181A;
+      --text-muted: #565E60;
+      --text-light: #EAE6DF;
+      --text-dark-muted: #959E9F;
+      
+      --orange: #D85822;
+      --orange-hover: #C04A18;
+      --orange-subtle: #FDF3ED;
+      
+      --border-light: #E4DFD5;
+      --border-dark: #272D30;
+      
+      --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --container-max: 1240px;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-full: 9999px;
+      --transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+      background-color: var(--bg-cream);
+      color: var(--text-main);
+      font-family: var(--font-family);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      min-height: 100vh;
+      line-height: 1.55;
+      overflow-x: hidden;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+      transition: var(--transition);
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--orange);
+      outline-offset: 3px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--container-max);
+      margin: 0 auto;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    @media (min-width: 768px) {
+      .container {
+        padding-left: 32px;
+        padding-right: 32px;
+      }
+    }
+
+    /* Common Typography Utilities */
+    .eyebrow {
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 12px;
+      display: inline-block;
+    }
+
+    .highlight-orange {
+      color: var(--orange);
+    }
+
+    /* Buttons */
+    .btn-orange {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 48px;
+      padding: 0 24px;
+      background-color: var(--orange);
+      color: #FFFFFF;
+      font-size: 0.875rem;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      transition: var(--transition);
+      border: 1px solid var(--orange);
+    }
+
+    .btn-orange:hover {
+      background-color: var(--orange-hover);
+      border-color: var(--orange-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-white {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 22px;
+      background-color: var(--bg-surface);
+      color: var(--text-main);
+      font-size: 0.875rem;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-light);
+      transition: var(--transition);
+    }
+
+    .btn-white:hover {
+      background-color: #F1ECE2;
+      border-color: #D2CBC0;
+    }
+
+    /* =============================================================
+       SITE HEADER (DARK NAVBAR)
+       ============================================================= */
+    .site-header {
+      background-color: var(--bg-dark);
+      color: #FFFFFF;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--border-dark);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .brand-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 1.35rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      color: #FFFFFF;
+    }
+
+    .logo-slash {
+      display: inline-block;
+      width: 0;
+      height: 0;
+      border-left: 9px solid transparent;
+      border-right: 0 solid transparent;
+      border-bottom: 15px solid var(--orange);
+      transform: skewX(-15deg);
+      margin-left: 2px;
+    }
+
+    .header-nav {
+      display: none;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+
+    @media (min-width: 900px) {
+      .header-nav {
+        display: flex;
+      }
+    }
+
+    .nav-item a {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #D4D8DA;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .nav-item a:hover,
+    .nav-item.active a {
+      color: #FFFFFF;
+    }
+
+    .nav-item.active a {
+      border-bottom: 2px solid var(--orange);
+      padding-bottom: 4px;
+    }
+
+    .chevron-icon {
+      font-size: 0.65rem;
+      opacity: 0.7;
+    }
+
+    .header-cta {
+      display: none;
+    }
+
+    @media (min-width: 640px) {
+      .header-cta {
+        display: inline-flex;
+      }
+    }
+
+    .btn-header-cta {
+      height: 40px;
+      padding: 0 18px;
+      font-size: 0.8125rem;
+    }
+
+    .mobile-menu-btn {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      padding: 8px;
+      background: none;
+      border: none;
+    }
+
+    @media (min-width: 900px) {
+      .mobile-menu-btn {
+        display: none;
+      }
+    }
+
+    .mobile-menu-bar {
+      width: 22px;
+      height: 2px;
+      background-color: #FFFFFF;
+      border-radius: 2px;
+    }
+
+    /* =============================================================
+       HERO SECTION
+       ============================================================= */
+    .hero-section {
+      padding-top: 48px;
+      padding-bottom: 64px;
+      background-color: var(--bg-cream);
+    }
+
+    @media (min-width: 992px) {
+      .hero-section {
+        padding-top: 64px;
+        padding-bottom: 80px;
+      }
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    @media (min-width: 992px) {
+      .hero-grid {
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 56px;
+      }
+    }
+
+    .hero-title {
+      font-size: clamp(2.15rem, 4.4vw, 3.4rem);
+      font-weight: 900;
+      line-height: 1.12;
+      letter-spacing: -0.035em;
+      color: var(--text-main);
+      margin-bottom: 20px;
+    }
+
+    .hero-desc {
+      font-size: clamp(1rem, 1.4vw, 1.125rem);
+      color: var(--text-muted);
+      line-height: 1.6;
+      max-width: 500px;
+      margin-bottom: 32px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+
+    /* 3 Trust Indicators Row */
+    .trust-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      padding-top: 28px;
+      border-top: 1px solid var(--border-light);
+    }
+
+    @media (min-width: 540px) {
+      .trust-row {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+    }
+
+    .trust-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .trust-icon-box {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--orange);
+    }
+
+    .trust-texts {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .trust-title {
+      font-size: 0.8125rem;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.25;
+    }
+
+    .trust-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.35;
+      margin-top: 2px;
+    }
+
+    .hero-visual-frame {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 16px 36px rgba(18, 21, 23, 0.08);
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-light);
+    }
+
+    .hero-visual-frame img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+    }
+
+    /* =============================================================
+       SERVICE PILLARS SECTION (DARK THEME)
+       ============================================================= */
+    .service-section {
+      background-color: var(--bg-dark);
+      color: #FFFFFF;
+      padding-top: 72px;
+      padding-bottom: 80px;
+    }
+
+    @media (min-width: 992px) {
+      .service-section {
+        padding-top: 88px;
+        padding-bottom: 96px;
+      }
+    }
+
+    .service-header-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+
+    @media (min-width: 768px) {
+      .service-header-row {
+        grid-template-columns: 1fr 1fr;
+        align-items: flex-end;
+        gap: 32px;
+      }
+    }
+
+    .service-headline {
+      font-size: clamp(1.85rem, 3.2vw, 2.5rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      color: #FFFFFF;
+    }
+
+    .service-header-desc {
+      font-size: 0.9375rem;
+      color: var(--text-dark-muted);
+      line-height: 1.6;
+    }
+
+    .service-cards-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    @media (min-width: 900px) {
+      .service-cards-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+      }
+    }
+
+    .service-card {
+      background-color: var(--bg-card-dark);
+      border: 1px solid var(--border-dark);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      align-items: center;
+      transition: var(--transition);
+      overflow: hidden;
+    }
+
+    @media (min-width: 560px) {
+      .service-card {
+        grid-template-columns: 1.1fr 0.9fr;
+        padding: 28px;
+      }
+    }
+
+    .service-card:hover {
+      border-color: #3E464A;
+      transform: translateY(-2px);
+    }
+
+    .card-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+
+    .card-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #FFFFFF;
+      margin-bottom: 10px;
+    }
+
+    .card-desc {
+      font-size: 0.875rem;
+      color: var(--text-dark-muted);
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+
+    .card-circle-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--orange);
+      color: #FFFFFF;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.125rem;
+      transition: var(--transition);
+    }
+
+    .service-card:hover .card-circle-btn {
+      background-color: var(--orange-hover);
+      transform: translateX(3px);
+    }
+
+    .card-media {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      aspect-ratio: 1/1;
+      background-color: #242A2C;
+    }
+
+    .card-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* =============================================================
+       TARGET AUDIENCE SECTION (SOLUSI PRODUKSI UNTUK BERBAGAI KEBUTUHAN)
+       ============================================================= */
+    .audience-section {
+      padding-top: 72px;
+      padding-bottom: 80px;
+      background-color: var(--bg-cream);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .audience-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    @media (min-width: 992px) {
+      .audience-grid {
+        grid-template-columns: 340px 1fr;
+        gap: 56px;
+      }
+    }
+
+    .audience-title {
+      font-size: clamp(1.75rem, 2.8vw, 2.25rem);
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+    }
+
+    .audience-cards-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 540px) {
+      .audience-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 900px) {
+      .audience-cards-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .audience-card {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 14px;
+      transition: var(--transition);
+    }
+
+    .audience-card:hover {
+      border-color: #D0C9BD;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(18, 21, 23, 0.04);
+    }
+
+    .audience-icon-wrap {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-sm);
+      background-color: var(--orange-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--orange);
+      font-size: 1.25rem;
+    }
+
+    .audience-card-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+    }
+
+    .audience-card-desc {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* =============================================================
+       ORDER PROCESS SECTION (TIGA LANGKAH MUDAH)
+       ============================================================= */
+    .process-section {
+      padding-top: 72px;
+      padding-bottom: 80px;
+      background-color: var(--bg-cream);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .process-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    @media (min-width: 992px) {
+      .process-grid {
+        grid-template-columns: 0.85fr 1.15fr;
+        gap: 56px;
+      }
+    }
+
+    .process-visual-frame {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--border-light);
+      box-shadow: 0 12px 28px rgba(18, 21, 23, 0.06);
+    }
+
+    .process-visual-frame img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+    }
+
+    .process-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .process-title {
+      font-size: clamp(1.85rem, 3.2vw, 2.5rem);
+      font-weight: 800;
+      line-height: 1.18;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 36px;
+    }
+
+    .steps-row {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    @media (min-width: 768px) {
+      .steps-row {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 16px;
+      }
+    }
+
+    .step-unit {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .step-badge {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--orange);
+      color: #FFFFFF;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.875rem;
+      font-weight: 800;
+      margin-bottom: 16px;
+      flex-shrink: 0;
+    }
+
+    .step-heading {
+      font-size: 1.0625rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+
+    .step-text {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .step-arrow {
+      display: none;
+      font-size: 1.25rem;
+      color: #A4A9AB;
+      align-self: center;
+      margin-top: 10px;
+    }
+
+    @media (min-width: 768px) {
+      .step-arrow {
+        display: block;
+      }
+    }
+
+    /* =============================================================
+       FAQ ACCORDION SECTION
+       ============================================================= */
+    .faq-section {
+      padding-top: 72px;
+      padding-bottom: 88px;
+      background-color: var(--bg-cream);
+    }
+
+    .faq-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 36px;
+    }
+
+    @media (min-width: 992px) {
+      .faq-grid {
+        grid-template-columns: 360px 1fr;
+        gap: 64px;
+      }
+    }
+
+    .faq-title {
+      font-size: clamp(1.85rem, 3.2vw, 2.5rem);
+      font-weight: 800;
+      line-height: 1.18;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+    }
+
+    .faq-accordion {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .faq-item {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      transition: var(--transition);
+    }
+
+    .faq-item summary {
+      padding: 20px 22px;
+      font-size: 0.9375rem;
+      font-weight: 700;
+      color: var(--text-main);
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .faq-item summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .faq-chevron {
+      width: 20px;
+      height: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      transition: transform 0.2s ease;
+      font-size: 0.75rem;
+    }
+
+    .faq-item[open] .faq-chevron {
+      transform: rotate(180deg);
+      color: var(--orange);
+    }
+
+    .faq-answer {
+      padding: 0 22px 20px 22px;
+      font-size: 0.875rem;
+      line-height: 1.6;
+      color: var(--text-muted);
+      border-top: 1px solid #F1ECE2;
+      padding-top: 14px;
+    }
+
+    /* =============================================================
+       FINAL CONVERSION CTA BANNER
+       ============================================================= */
+    .cta-banner-section {
+      background-color: var(--bg-dark);
+      color: #FFFFFF;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border-dark);
+    }
+
+    .cta-banner-inner {
+      display: grid;
+      grid-template-columns: 1fr;
+      align-items: center;
+      gap: 32px;
+      padding-top: 64px;
+      padding-bottom: 64px;
+      position: relative;
+      z-index: 2;
+    }
+
+    @media (min-width: 900px) {
+      .cta-banner-inner {
+        grid-template-columns: 1.3fr 0.7fr;
+        padding-top: 80px;
+        padding-bottom: 80px;
+      }
+    }
+
+    .cta-title {
+      font-size: clamp(1.85rem, 3.4vw, 2.75rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      color: #FFFFFF;
+      margin-bottom: 12px;
+    }
+
+    .cta-desc {
+      font-size: 0.9375rem;
+      color: var(--text-dark-muted);
+      max-width: 520px;
+      line-height: 1.6;
+    }
+
+    .cta-action-side {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 20px;
+    }
+
+    @media (min-width: 900px) {
+      .cta-action-side {
+        align-items: flex-end;
+      }
+    }
+
+    .cta-bg-threads {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 55%;
+      height: 100%;
+      opacity: 0.28;
+      pointer-events: none;
+      z-index: 1;
+      object-fit: cover;
+      mask-image: linear-gradient(to right, transparent, black 60%);
+      -webkit-mask-image: linear-gradient(to right, transparent, black 60%);
+    }
+
+    /* =============================================================
+       FOOTER
+       ============================================================= */
+    .site-footer {
+      background-color: var(--bg-darker);
+      color: var(--text-dark-muted);
+      padding-top: 64px;
+      padding-bottom: 32px;
+      font-size: 0.8125rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+      margin-bottom: 56px;
+    }
+
+    @media (min-width: 640px) {
+      .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 992px) {
+      .footer-grid {
+        grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
+        gap: 48px;
+      }
+    }
+
+    .footer-brand-title {
+      margin-bottom: 14px;
+    }
+
+    .footer-brand-desc {
+      line-height: 1.6;
+      max-width: 280px;
+    }
+
+    .footer-col-title {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin-bottom: 16px;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-links a:hover {
+      color: #FFFFFF;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid var(--border-dark);
+      padding-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: flex-start;
+      justify-content: space-between;
+      color: #6C7476;
+    }
+
+    @media (min-width: 768px) {
+      .footer-bottom {
+        flex-direction: row;
+        align-items: center;
+      }
+    }
+
+    .footer-legal-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .footer-legal-links a:hover {
+      color: #9AA3A5;
+    }
+
+    /* Accessibility */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =============================================================
+       SITE HEADER (NAVBAR)
+       ============================================================= -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#top" class="brand-logo" aria-label="ABUTAS Homepage">
+        <span>ABUTAS</span>
+        <span class="logo-slash" aria-hidden="true"></span>
+      </a>
+
+      <nav aria-label="Navigasi Utama">
+        <ul class="header-nav">
+          <li class="nav-item active"><a href="#top">Beranda</a></li>
+          <li class="nav-item">
+            <a href="#layanan">
+              Layanan <span class="chevron-icon" aria-hidden="true">▾</span>
+            </a>
+          </li>
+          <li class="nav-item"><a href="#penggunaan">Portofolio</a></li>
+          <li class="nav-item"><a href="#alur-kerja">Tentang Kami</a></li>
+          <li class="nav-item"><a href="#faq">Artikel</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-cta">
+        <a href="#konsultasi" class="btn-orange btn-header-cta">
+          Konsultasi Produksi <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+
+      <button class="mobile-menu-btn" type="button" aria-label="Buka Menu Navigasi">
+        <span class="mobile-menu-bar"></span>
+        <span class="mobile-menu-bar"></span>
+        <span class="mobile-menu-bar"></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- =============================================================
+         HERO SECTION
+         ============================================================= -->
+    <section class="hero-section" aria-labelledby="hero-heading">
+      <div class="container">
+        <div class="hero-grid">
+          <div class="hero-left">
+            <span class="eyebrow">/ MANUFACTURING STUDIO /</span>
+            
+            <h1 id="hero-heading" class="hero-title">
+              Konveksi Tas &amp; Pakaian Custom untuk <span class="highlight-orange">Kebutuhan Bisnis</span>
+            </h1>
+
+            <p class="hero-desc">
+              Partner produksi tas dan pakaian custom untuk perusahaan, event, komunitas, dan kebutuhan brand Anda.
+            </p>
+
+            <div class="hero-actions">
+              <a href="#konsultasi" class="btn-orange">
+                Konsultasi Produksi <span aria-hidden="true">↗</span>
+              </a>
+              <a href="#layanan" class="btn-white">
+                Jelajahi Layanan
+              </a>
+            </div>
+
+            <!-- 3 Trust Indicators -->
+            <div class="trust-row">
+              <div class="trust-item">
+                <div class="trust-icon-box" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                    <polyline points="2 17 12 22 22 17"></polyline>
+                    <polyline points="2 12 12 17 22 12"></polyline>
+                  </svg>
+                </div>
+                <div class="trust-texts">
+                  <span class="trust-title">Produksi Custom</span>
+                  <span class="trust-sub">Sesuai Kebutuhan</span>
+                </div>
+              </div>
+
+              <div class="trust-item">
+                <div class="trust-icon-box" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                  </svg>
+                </div>
+                <div class="trust-texts">
+                  <span class="trust-title">Pendampingan</span>
+                  <span class="trust-sub">Dari Desain hingga Produksi</span>
+                </div>
+              </div>
+
+              <div class="trust-item">
+                <div class="trust-icon-box" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    <path d="m9 12 2 2 4-4"></path>
+                  </svg>
+                </div>
+                <div class="trust-texts">
+                  <span class="trust-title">Kualitas Jahitan</span>
+                  <span class="trust-sub">yang Rapi &amp; Terstandar</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-right">
+            <div class="hero-visual-frame">
+              <img 
+                src="assets/hero-showcase.jpg" 
+                alt="Ensemble tas canvas ecru, ransel charcoal, polo shirt navy, dan kain oranye pada studio ABUTAS" 
+                width="720" 
+                height="540" 
+                loading="eager"
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =============================================================
+         SERVICE PILLARS SECTION (DARK THEME)
+         ============================================================= -->
+    <section id="layanan" class="service-section" aria-labelledby="service-heading">
+      <div class="container">
+        <div class="service-header-row">
+          <div>
+            <span class="eyebrow">/ LAYANAN UTAMA /</span>
+            <h2 id="service-heading" class="service-headline">Dua Pilar Produksi Custom Kami</h2>
+          </div>
+          <p class="service-header-desc">
+            Fokus pada produksi tas dan pakaian dengan kualitas material pilihan, proses yang rapi, dan hasil yang sesuai kebutuhan bisnis Anda.
+          </p>
+        </div>
+
+        <div class="service-cards-grid">
+          <!-- Card 1: Konveksi Tas Custom -->
+          <article class="service-card" aria-labelledby="tas-title">
+            <div class="card-content">
+              <div>
+                <h3 id="tas-title" class="card-title">Konveksi Tas Custom</h3>
+                <p class="card-desc">
+                  Berbagai jenis tas untuk keperluan kerja, event, promosi, hingga brand.
+                </p>
+              </div>
+              <a href="#konsultasi" class="card-circle-btn" aria-label="Konsultasi Konveksi Tas Custom">
+                <span aria-hidden="true">&rarr;</span>
+              </a>
+            </div>
+            <div class="card-media">
+              <img 
+                src="assets/service-bag-detail.jpg" 
+                alt="Detail ransel canvas zaitun dengan strap kulit dan buckle kuningan" 
+                width="400" 
+                height="400" 
+                loading="lazy"
+              >
+            </div>
+          </article>
+
+          <!-- Card 2: Konveksi Pakaian & Seragam -->
+          <article class="service-card" aria-labelledby="pakaian-title">
+            <div class="card-content">
+              <div>
+                <h3 id="pakaian-title" class="card-title">Konveksi Pakaian &amp; Seragam</h3>
+                <p class="card-desc">
+                  Kaos, polo, kemeja, jaket, hoodie, dan seragam sesuai kebutuhan Anda.
+                </p>
+              </div>
+              <a href="#konsultasi" class="card-circle-btn" aria-label="Konsultasi Konveksi Pakaian & Seragam">
+                <span aria-hidden="true">&rarr;</span>
+              </a>
+            </div>
+            <div class="card-media">
+              <img 
+                src="assets/service-apparel-detail.jpg" 
+                alt="Detail kerah kemeja polo katun hitam dan tumpukan sampel kain" 
+                width="400" 
+                height="400" 
+                loading="lazy"
+              >
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- =============================================================
+         TARGET AUDIENCE SECTION (SOLUSI PRODUKSI)
+         ============================================================= -->
+    <section id="penggunaan" class="audience-section" aria-labelledby="audience-heading">
+      <div class="container audience-grid">
+        <div>
+          <span class="eyebrow">/ UNTUK SIAPA? /</span>
+          <h2 id="audience-heading" class="audience-title">Solusi Produksi untuk Berbagai Kebutuhan</h2>
+        </div>
+
+        <div class="audience-cards-grid">
+          <!-- Item 1: Perusahaan -->
+          <div class="audience-card">
+            <div class="audience-icon-wrap" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+                <line x1="9" y1="22" x2="9" y2="22.01"></line>
+                <line x1="15" y1="22" x2="15" y2="22.01"></line>
+                <line x1="9" y1="6" x2="9" y2="6.01"></line>
+                <line x1="15" y1="6" x2="15" y2="6.01"></line>
+                <line x1="9" y1="10" x2="9" y2="10.01"></line>
+                <line x1="15" y1="10" x2="15" y2="10.01"></line>
+                <line x1="9" y1="14" x2="9" y2="14.01"></line>
+                <line x1="15" y1="14" x2="15" y2="14.01"></line>
+                <line x1="9" y1="18" x2="9" y2="18.01"></line>
+                <line x1="15" y1="18" x2="15" y2="18.01"></line>
+              </svg>
+            </div>
+            <h3 class="audience-card-title">Perusahaan</h3>
+            <p class="audience-card-desc">Seragam, goods perusahaan, dan kebutuhan operasional.</p>
+          </div>
+
+          <!-- Item 2: Event & Konferensi -->
+          <div class="audience-card">
+            <div class="audience-icon-wrap" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+            </div>
+            <h3 class="audience-card-title">Event &amp; Konferensi</h3>
+            <p class="audience-card-desc">Tas seminar, kit peserta, dan merchandise event.</p>
+          </div>
+
+          <!-- Item 3: Komunitas -->
+          <div class="audience-card">
+            <div class="audience-icon-wrap" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </div>
+            <h3 class="audience-card-title">Komunitas</h3>
+            <p class="audience-card-desc">Pakaian dan tas untuk komunitas, organisasi, atau kegiatan bersama.</p>
+          </div>
+
+          <!-- Item 4: Merchandise -->
+          <div class="audience-card">
+            <div class="audience-icon-wrap" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 12 20 22 4 22 4 12"></polyline>
+                <rect x="2" y="7" width="20" height="5"></rect>
+                <line x1="12" y1="22" x2="12" y2="7"></line>
+                <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path>
+                <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path>
+              </svg>
+            </div>
+            <h3 class="audience-card-title">Merchandise</h3>
+            <p class="audience-card-desc">Produk custom untuk branding, launching, atau promosi.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =============================================================
+         ORDER PROCESS SECTION (TIGA LANGKAH MUDAH)
+         ============================================================= -->
+    <section id="alur-kerja" class="process-section" aria-labelledby="process-heading">
+      <div class="container process-grid">
+        <div class="process-visual-frame">
+          <img 
+            src="assets/process-stitching.jpg" 
+            alt="Makro jahitan ganda rapi pada pakaian katun twill zaitun" 
+            width="560" 
+            height="420" 
+            loading="lazy"
+          >
+        </div>
+
+        <div class="process-content">
+          <span class="eyebrow">/ PROSES PEMESANAN /</span>
+          <h2 id="process-heading" class="process-title">Tiga Langkah Mudah dari Ide ke Produk</h2>
+
+          <div class="steps-row">
+            <!-- Step 1 -->
+            <div class="step-unit">
+              <div class="step-badge">01</div>
+              <h3 class="step-heading">Konsultasi</h3>
+              <p class="step-text">Ceritakan kebutuhan, konsep, dan gambaran produk Anda.</p>
+            </div>
+
+            <div class="step-arrow" aria-hidden="true">&rarr;</div>
+
+            <!-- Step 2 -->
+            <div class="step-unit">
+              <div class="step-badge">02</div>
+              <h3 class="step-heading">Penawaran &amp; Sampel</h3>
+              <p class="step-text">Dapatkan rekomendasi, penawaran, dan (opsional) sampel produk.</p>
+            </div>
+
+            <div class="step-arrow" aria-hidden="true">&rarr;</div>
+
+            <!-- Step 3 -->
+            <div class="step-unit">
+              <div class="step-badge">03</div>
+              <h3 class="step-heading">Produksi</h3>
+              <p class="step-text">Masuk ke tahap produksi dengan kontrol kualitas yang rapi.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =============================================================
+         FAQ SECTION
+         ============================================================= -->
+    <section id="faq" class="faq-section" aria-labelledby="faq-heading">
+      <div class="container faq-grid">
+        <div>
+          <span class="eyebrow">/ PERTANYAAN UMUM /</span>
+          <h2 id="faq-heading" class="faq-title">FAQ Seputar Produksi</h2>
+        </div>
+
+        <div class="faq-accordion">
+          <details class="faq-item" open>
+            <summary>
+              <span>Berapa minimal pemesanan (MOQ)?</span>
+              <span class="faq-chevron" aria-hidden="true">▾</span>
+            </summary>
+            <div class="faq-answer">
+              Minimal pemesanan dapat disesuaikan dengan jenis produk dan kebutuhan Anda. Silakan konsultasikan terlebih dahulu untuk detailnya.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary>
+              <span>Apakah bisa custom desain dan logo?</span>
+              <span class="faq-chevron" aria-hidden="true">▾</span>
+            </summary>
+            <div class="faq-answer">
+              Bisa. Kami menerima desain kustom dan menyediakan berbagai teknik aplikasi logo, seperti bordir komputer presisi, sablon manual/DTF, label woven, hingga cetak timbul (emboss).
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary>
+              <span>Berapa lama proses produksinya?</span>
+              <span class="faq-chevron" aria-hidden="true">▾</span>
+            </summary>
+            <div class="faq-answer">
+              Waktu pengerjaan standar berkisar antara 14 hingga 21 hari kerja setelah sampel dan spesifikasi disetujui, tergantung pada tingkat kerumitan desain dan volume pesanan Anda.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary>
+              <span>Bisa minta sampel terlebih dahulu?</span>
+              <span class="faq-chevron" aria-hidden="true">▾</span>
+            </summary>
+            <div class="faq-answer">
+              Tentu. Kami menyediakan opsi pembuatan approval sample sebelum produksi massal dimulai agar Anda dapat memeriksa langsung kualitas fisik, bahan, dan jahitan.
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- =============================================================
+         FINAL CONVERSION CTA BANNER
+         ============================================================= -->
+    <section id="konsultasi" class="cta-banner-section" aria-labelledby="cta-heading">
+      <img 
+        src="assets/cta-threads.jpg" 
+        alt="" 
+        class="cta-bg-threads" 
+        aria-hidden="true"
+      >
+      <div class="container cta-banner-inner">
+        <div>
+          <h2 id="cta-heading" class="cta-title">
+            Siap Wujudkan Kebutuhan <span class="highlight-orange">Produksi Anda?</span>
+          </h2>
+          <p class="cta-desc">
+            Diskusikan kebutuhan tas dan pakaian custom bersama tim Abutas. Kami siap membantu dari konsep hingga produksi.
+          </p>
+        </div>
+
+        <div class="cta-action-side">
+          <a 
+            href="https://wa.me/?text=Halo%20ABUTAS%2C%20saya%20ingin%20konsultasi%20produksi%20custom" 
+            class="btn-orange" 
+            target="_blank" 
+            rel="noopener noreferrer"
+          >
+            Konsultasi Produksi <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- =============================================================
+       SITE FOOTER
+       ============================================================= -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <!-- Col 1: Brand Info -->
+        <div>
+          <div class="brand-logo footer-brand-title">
+            <span>ABUTAS</span>
+            <span class="logo-slash" aria-hidden="true"></span>
+          </div>
+          <p class="footer-brand-desc">
+            Partner produksi tas dan pakaian custom untuk kebutuhan bisnis, event, komunitas, dan brand Anda.
+          </p>
+        </div>
+
+        <!-- Col 2: Layanan -->
+        <div>
+          <h3 class="footer-col-title">Layanan</h3>
+          <ul class="footer-links">
+            <li><a href="#layanan">Konveksi Tas</a></li>
+            <li><a href="#layanan">Konveksi Pakaian</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Perusahaan -->
+        <div>
+          <h3 class="footer-col-title">Perusahaan</h3>
+          <ul class="footer-links">
+            <li><a href="#alur-kerja">Tentang Kami</a></li>
+            <li><a href="#penggunaan">Portofolio</a></li>
+            <li><a href="#faq">Artikel</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 4: Hubungi Kami -->
+        <div>
+          <h3 class="footer-col-title">Hubungi Kami</h3>
+          <ul class="footer-links">
+            <li class="contact-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+              <span>info@abutas.com</span>
+            </li>
+            <li class="contact-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+              <a href="#konsultasi">Konsultasi via WhatsApp</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; 2026 ABUTAS. Semua hak cipta dilindungi.</div>
+        <div class="footer-legal-links">
+          <a href="#">Kebijakan Privasi</a>
+          <a href="#">Ketentuan Layanan</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

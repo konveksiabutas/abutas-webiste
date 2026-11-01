@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+@theme {
+  --color-canvas: #F8F6F0;
+  --color-paper: #FFFFFF;
+  --color-ink: #14181A;
+  --color-muted: #565E60;
+  --color-dark: #121517;
+  --color-dark-surface: #1A1E20;
+  --color-action: #D85822;
+  --color-action-hover: #C04A18;
+  --color-action-subtle: #FDF3ED;
+  --color-line-light: #E4DFD5;
+  --color-line-dark: #272D30;
+  --font-display: var(--font-archivo), "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-sans: var(--font-plus-jakarta-sans), system-ui, -apple-system, sans-serif;
+}
+
+:root {
+  --color-canvas: #F8F6F0;
+  --color-paper: #FFFFFF;
+  --color-ink: #14181A;
+  --color-muted: #565E60;
+  --color-dark: #121517;
+  --color-dark-surface: #1A1E20;
+  --color-action: #D85822;
+  --color-action-hover: #C04A18;
+  --color-action-subtle: #FDF3ED;
+  --color-line-light: #E4DFD5;
+  --color-line-dark: #272D30;
+  color-scheme: light;
+}
+
+html,
+body {
+  overflow-x: clip;
+  max-width: 100%;
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+}
+
+/* Accessible focus ring style */
+:focus-visible {
+  outline: 2px solid var(--color-action);
+  outline-offset: 3px;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

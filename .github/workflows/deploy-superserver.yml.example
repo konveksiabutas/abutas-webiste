@@ -1,0 +1,91 @@
+# ==============================================================================
+# ABUTAS.COM — GitHub Actions CI/CD Pipeline (CONTOH/EXAMPLE)
+#
+# Alur Kerja:
+# 1. Sanity CMS Webhook / Git Push -> 2. Next.js Static Export -> 3. Upload ke Superserver cPanel
+#
+# CATATAN TATA KELOLA (STEP 03A):
+# File ini berakhiran '.example' dan BELUM diaktifkan secara otomatis.
+# Aktifkan hanya setelah pemilik mengonfigurasi kredensial Sanity dan FTP cPanel di GitHub Secrets.
+# ==============================================================================
+
+name: Deploy Static Export to Superserver cPanel
+
+on:
+  # Trigger manual via antarmuka GitHub Actions
+  workflow_dispatch:
+
+  # Trigger via webhook Sanity saat ada konten yang dipublikasikan (Publish event)
+  repository_dispatch:
+    types: [sanity-content-published]
+
+  # Optional: Trigger saat push ke branch main (setelah siap production)
+  # push:
+  #   branches: [main]
+
+concurrency:
+  group: "superserver-deployment"
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      # 1. Checkout source code
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 2. Setup Node.js runtime
+      - name: Setup Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      # 3. Install dependencies
+      - name: Install Dependencies
+        run: npm ci
+
+      # 4. Verifikasi Kualitas Kode (Hard Gates)
+      - name: Run Linter
+        run: npm run lint
+
+      - name: Run Typecheck
+        run: npm run typecheck
+
+      - name: Run Unit Tests
+        run: npm run test
+
+      # 5. Build Next.js Static Export
+      # Variabel Sanity diteruskan agar konten published ter-render ke dalam HTML statis
+      - name: Build Next.js Static Export
+        env:
+          NEXT_PUBLIC_SITE_URL: "https://abutas.com"
+          NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.SANITY_PROJECT_ID }}
+          NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.SANITY_DATASET || 'production' }}
+          NEXT_PUBLIC_SANITY_API_VERSION: "2026-11-01"
+          SANITY_API_READ_TOKEN: ${{ secrets.SANITY_API_READ_TOKEN }}
+        run: npm run build
+
+      # 6. Verifikasi Integritas Direktori out/
+      - name: Verify Static Output
+        run: |
+          test -d out
+          test -f out/index.html
+          test -f out/404.html
+          test -f out/sitemap.xml
+          echo "Static export verified successfully."
+
+      # 7. Deployment ke Superserver cPanel via FTPS / Secure FTP
+      # CATATAN: Langkah ini dimatikan (commented) sampai kredensial cPanel dikonfirmasi oleh pemilik.
+      # - name: Deploy to cPanel public_html via FTPS
+      #   uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      #   with:
+      #     server: ${{ secrets.CPANEL_FTP_SERVER }}
+      #     username: ${{ secrets.CPANEL_FTP_USERNAME }}
+      #     password: ${{ secrets.CPANEL_FTP_PASSWORD }}
+      #     local-dir: ./out/
+      #     server-dir: ./public_html/
+      #     dangerous-clean-slate: false

@@ -1,0 +1,165 @@
+# ==============================================================================
+# ABUTAS.COM — GitHub Actions CI & Static Export Pipeline
+#
+# Pipeline otomatis untuk verifikasi kualitas kode, kompilasi Next.js Static Export,
+# audit keamanan konten publik, dan penyimpanan build artifact.
+#
+# Sesuai Tata Kelola Step 03C.1:
+# - Berjalan manual via workflow_dispatch (atau repository_dispatch terautentikasi).
+# - TIDAK memuat langkah FTP deployment aktif.
+# - Menggagalkan build jika ditemukan error kualitas, konten uji, atau kebocoran draft.
+# ==============================================================================
+
+name: Build Next.js Static Export & Safety Verification
+
+on:
+  # 1. Trigger manual dari dashboard GitHub Actions
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: "Alasan eksekusi build (opsional)"
+        required: false
+        default: "Manual production build verification"
+
+  # 2. Trigger terautentikasi via Sanity Webhook / API dispatch (dinonaktifkan secara default)
+  repository_dispatch:
+    types: [sanity-production-publish]
+
+concurrency:
+  group: "abutas-production-build"
+  cancel-in-progress: true
+
+jobs:
+  build-and-verify:
+    name: Lint, Test, Static Export & Safety Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      # 1. Checkout repository source code
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      # 2. Setup Node.js runtime (menggunakan Node 22 LTS untuk dukungan natif strip-types)
+      - name: Setup Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+
+      # 3. Clean install dependencies dari package-lock.json
+      - name: Install Dependencies
+        run: npm ci
+
+      # 4. Verifikasi kualitas kode (Hard Gates)
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run TypeScript Typecheck
+        run: npm run typecheck
+
+      - name: Run Automated Test Suite
+        run: npm run test
+
+      # 5. Build Next.js Static Export
+      - name: Build Next.js Static Export
+        env:
+          NEXT_PUBLIC_SITE_URL: "https://abutas.com"
+          NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.SANITY_PROJECT_ID || vars.SANITY_PROJECT_ID }}
+          NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.SANITY_DATASET || vars.SANITY_DATASET || 'production' }}
+          NEXT_PUBLIC_SANITY_API_VERSION: "2026-11-01"
+          SANITY_API_READ_TOKEN: ${{ secrets.SANITY_API_READ_TOKEN }}
+        run: npm run build
+
+      # 6. Audit output direktori out/ & keamanan konten
+      - name: Audit Static Output & Content Publication Safety
+        run: |
+          echo "Memulai audit integritas direktori out/..."
+          
+          # Verifikasi direktori dan file inti statis
+          test -d out || { echo "FATAL: Direktori out/ tidak terbentuk!"; exit 1; }
+          test -f out/index.html || { echo "FATAL: out/index.html tidak ditemukan!"; exit 1; }
+          test -f out/404.html || { echo "FATAL: out/404.html tidak ditemukan!"; exit 1; }
+          test -f out/sitemap.xml || { echo "FATAL: out/sitemap.xml tidak ditemukan!"; exit 1; }
+          test -f out/.htaccess || { echo "FATAL: out/.htaccess tidak ditemukan!"; exit 1; }
+          
+          # Negative Check 1: Pastikan dokumen uji tidak menghasilkan file HTML publik
+          if [ -d "out/artikel/tas-ransel-laptop-souvenir" ]; then
+            echo "FATAL: Ditemukan dokumen uji 'tas-ransel-laptop-souvenir' di out/artikel/!"
+            exit 1
+          fi
+          
+          if [ -d "out/portofolio/tas-ransel-pln" ]; then
+            echo "FATAL: Ditemukan dokumen uji 'tas-ransel-pln' di out/portofolio/!"
+            exit 1
+          fi
+
+          # Negative Check 2: Pastikan dokumen uji tidak tercantum di sitemap.xml
+          if grep -q "tas-ransel-laptop-souvenir" out/sitemap.xml; then
+            echo "FATAL: Slug 'tas-ransel-laptop-souvenir' bocor ke out/sitemap.xml!"
+            exit 1
+          fi
+
+          if grep -q "tas-ransel-pln" out/sitemap.xml; then
+            echo "FATAL: Slug 'tas-ransel-pln' bocor ke out/sitemap.xml!"
+            exit 1
+          fi
+
+          # Negative Check 3: Pastikan URL teknis _placeholder tidak terindeks di sitemap
+          if grep -q "_placeholder" out/sitemap.xml; then
+            echo "FATAL: Rute _placeholder bocor ke out/sitemap.xml!"
+            exit 1
+          fi
+
+          # Positive Check: Pastikan halaman indeks artikel & portofolio noindex saat draft/kosong
+          grep -q "noindex" out/artikel/index.html || { echo "FATAL: Halaman artikel/ harus noindex saat konten belum terbit!"; exit 1; }
+          grep -q "noindex" out/portofolio/index.html || { echo "FATAL: Halaman portofolio/ harus noindex saat konten belum terbit!"; exit 1; }
+
+          echo "Audit integritas static output dan safety gates BERHASIL LULUS."
+
+      # 7. Audit ketiadaan file kredensial & kompresi arsip rilis
+      - name: Verify Artifact Cleanliness & Package Release Archive
+        run: |
+          echo "Audit ketiadaan file rahasia/kredensial pada out/..."
+
+          # Pastikan tidak ada file environment atau secret yang bocor ke out/
+          if find out/ -type f -name ".env*" | grep -q .; then
+            echo "FATAL: Ditemukan file .env dalam direktori out/!"
+            exit 1
+          fi
+
+          if find out/ -type f -name "*.pem" | grep -q .; then
+            echo "FATAL: Ditemukan file sertifikat/kunci privat *.pem dalam out/!"
+            exit 1
+          fi
+
+          # Verifikasi ketersediaan seluruh file utama
+          test -f out/index.html || { echo "FATAL: out/index.html hilang!"; exit 1; }
+          test -f out/404.html || { echo "FATAL: out/404.html hilang!"; exit 1; }
+          test -f out/robots.txt || { echo "FATAL: out/robots.txt hilang!"; exit 1; }
+          test -f out/sitemap.xml || { echo "FATAL: out/sitemap.xml hilang!"; exit 1; }
+          test -f out/.htaccess || { echo "FATAL: out/.htaccess hilang!"; exit 1; }
+          test -d out/_next || { echo "FATAL: Direktori out/_next/ hilang!"; exit 1; }
+
+          # Buat arsip terkompresi yang mempertahankan .htaccess dan metadata file
+          tar -czf abutas-static-export.tar.gz -C out .
+          echo "Arsip rilis statis berhasil dibuat: abutas-static-export.tar.gz"
+
+      # 8. Simpan direktori out/ (termasuk .htaccess) sebagai Build Artifact
+      - name: Upload Static Export Artifact (Directory)
+        uses: actions/upload-artifact@v4
+        with:
+          name: abutas-static-export-${{ github.sha || 'latest' }}
+          path: out/
+          retention-days: 7
+          if-no-files-found: error
+          include-hidden-files: true
+
+      # 9. Simpan arsip terkompresi sebagai Release Archive Artifact
+      - name: Upload Static Export Archive (Tarball)
+        uses: actions/upload-artifact@v4
+        with:
+          name: abutas-release-archive-${{ github.sha || 'latest' }}
+          path: abutas-static-export.tar.gz
+          retention-days: 7
+          if-no-files-found: error

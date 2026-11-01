@@ -1,0 +1,12 @@
+# Dependencies
+node_modules
+
+# Distribution
+dist
+
+# Sanity runtime cache
+.sanity
+
+# Environment variables
+.env*
+

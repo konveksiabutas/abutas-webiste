@@ -1,0 +1,24 @@
+{
+  "name": "abutas-studio",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "sanity dev",
+    "start": "sanity start",
+    "build": "sanity build",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@sanity/vision": "^6.21.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "sanity": "^6.21.0",
+    "styled-components": "^6.1.15"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "^5"
+  }
+}

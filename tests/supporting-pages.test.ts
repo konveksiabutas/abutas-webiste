@@ -1,0 +1,91 @@
+import test from "node:test";
+import assert from "node:assert";
+import fs from "node:fs";
+import path from "node:path";
+
+test("Step 02B: Supporting Website Pages Verification", async (t) => {
+  const rootDir = process.cwd();
+  const tentangPath = path.resolve(rootDir, "src/app/tentang-kami/page.tsx");
+  const kontakPath = path.resolve(rootDir, "src/app/kontak/page.tsx");
+  const caraPesanPath = path.resolve(rootDir, "src/app/cara-pesan/page.tsx");
+  const portofolioPath = path.resolve(rootDir, "src/app/portofolio/page.tsx");
+  const artikelPath = path.resolve(rootDir, "src/app/artikel/page.tsx");
+  const sitemapPath = path.resolve(rootDir, "src/app/sitemap.ts");
+  const headerPath = path.resolve(rootDir, "src/components/Header.tsx");
+  const footerPath = path.resolve(rootDir, "src/components/Footer.tsx");
+
+  await t.test("All 5 supporting page files and components exist", () => {
+    assert.ok(fs.existsSync(tentangPath), "src/app/tentang-kami/page.tsx must exist");
+    assert.ok(fs.existsSync(kontakPath), "src/app/kontak/page.tsx must exist");
+    assert.ok(fs.existsSync(caraPesanPath), "src/app/cara-pesan/page.tsx must exist");
+    assert.ok(fs.existsSync(portofolioPath), "src/app/portofolio/page.tsx must exist");
+    assert.ok(fs.existsSync(artikelPath), "src/app/artikel/page.tsx must exist");
+    assert.ok(
+      fs.existsSync(path.resolve(rootDir, "src/components/RfqContactForm.tsx")),
+      "RfqContactForm must exist"
+    );
+    assert.ok(
+      fs.existsSync(path.resolve(rootDir, "src/components/PortfolioViewer.tsx")),
+      "PortfolioViewer must exist"
+    );
+    assert.ok(
+      fs.existsSync(path.resolve(rootDir, "src/components/ArticleIndexViewer.tsx")),
+      "ArticleIndexViewer must exist"
+    );
+  });
+
+  await t.test("Tentang Kami page has unique single H1, metadata, and canonical", () => {
+    const content = fs.readFileSync(tentangPath, "utf8");
+    assert.ok(content.includes("<h1"), "Must contain <h1 tag");
+    assert.ok(content.includes("https://abutas.com/tentang-kami/"), "Must specify canonical URL");
+    assert.ok(content.includes("BreadcrumbList"), "Must include BreadcrumbList JSON-LD");
+    assert.ok(content.includes("AboutPage"), "Must include AboutPage JSON-LD");
+  });
+
+  await t.test("Kontak page provides RFQ form and transparent consultation flow", () => {
+    const content = fs.readFileSync(kontakPath, "utf8");
+    const rfqContent = fs.readFileSync(path.resolve(rootDir, "src/components/RfqContactForm.tsx"), "utf8");
+    assert.ok(content.includes("<h1"), "Must contain <h1 tag");
+    assert.ok(content.includes("https://abutas.com/kontak/"), "Must specify canonical URL");
+    assert.ok(content.includes("RfqContactForm"), "Must embed RfqContactForm");
+    assert.ok(rfqContent.includes("wa.me/?text="), "RFQ form must format direct WhatsApp message");
+  });
+
+  await t.test("Cara Pesan page explains 5-step workflow without unverified promises", () => {
+    const content = fs.readFileSync(caraPesanPath, "utf8");
+    assert.ok(content.includes("<h1"), "Must contain <h1 tag");
+    assert.ok(content.includes("https://abutas.com/cara-pesan/"), "Must specify canonical URL");
+    assert.ok(content.includes("Konsultasi & Pengiriman Brief"), "Must detail Step 01");
+    assert.ok(content.includes("Rekomendasi Bahan & Penawaran Harga"), "Must detail Step 02");
+    assert.ok(content.includes("Persetujuan Mockup Visual / Sampel"), "Must detail Step 03");
+  });
+
+  await t.test("Portofolio and Artikel pages have noindex draft governance", () => {
+    const portofolioContent = fs.readFileSync(portofolioPath, "utf8");
+    const artikelContent = fs.readFileSync(artikelPath, "utf8");
+    assert.ok(portofolioContent.includes("index: false"), "Portofolio must specify robots noindex");
+    assert.ok(artikelContent.includes("index: false"), "Artikel must specify robots noindex");
+  });
+
+  await t.test("Public sitemap includes published pages and excludes unverified draft pages", () => {
+    const sitemapContent = fs.readFileSync(sitemapPath, "utf8");
+    assert.ok(sitemapContent.includes("/tentang-kami/"), "Sitemap must include tentang-kami");
+    assert.ok(sitemapContent.includes("/cara-pesan/"), "Sitemap must include cara-pesan");
+    assert.ok(sitemapContent.includes("/kontak/"), "Sitemap must include kontak");
+    assert.ok(!sitemapContent.includes("/portofolio/"), "Sitemap must NOT include draft portofolio");
+    assert.ok(!sitemapContent.includes("/artikel/"), "Sitemap must NOT include draft artikel");
+  });
+
+  await t.test("Header and Footer contain links to supporting pages", () => {
+    const headerContent = fs.readFileSync(headerPath, "utf8");
+    const footerContent = fs.readFileSync(footerPath, "utf8");
+    assert.ok(headerContent.includes("/tentang-kami/"), "Header must link to /tentang-kami/");
+    assert.ok(headerContent.includes("/cara-pesan/"), "Header must link to /cara-pesan/");
+    assert.ok(headerContent.includes("/kontak/"), "Header must link to /kontak/");
+    assert.ok(footerContent.includes("/tentang-kami/"), "Footer must link to /tentang-kami/");
+    assert.ok(footerContent.includes("/cara-pesan/"), "Footer must link to /cara-pesan/");
+    assert.ok(footerContent.includes("/kontak/"), "Footer must link to /kontak/");
+    assert.ok(!footerContent.includes("/portofolio/"), "Footer must hide draft /portofolio/ link");
+    assert.ok(!footerContent.includes("/artikel/"), "Footer must hide draft /artikel/ link");
+  });
+});
