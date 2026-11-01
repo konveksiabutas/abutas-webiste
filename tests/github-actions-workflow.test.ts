@@ -23,8 +23,10 @@ test("Step 03C.1: GitHub Actions CI/CD Foundation & Safety Workflow Verification
   await t.test("3. Workflow includes mandatory quality control hard gates", () => {
     const content = fs.readFileSync(workflowPath, "utf8");
     assert.ok(content.includes("npm ci"), "Must install clean dependencies using npm ci");
+    assert.ok(content.includes("npm ci --prefix studio"), "Must install Sanity Studio dependencies using npm ci --prefix studio");
     assert.ok(content.includes("npm run lint"), "Must execute ESLint check");
     assert.ok(content.includes("npm run typecheck"), "Must execute TypeScript typecheck");
+    assert.ok(content.includes("npm run studio:typecheck"), "Must execute Sanity Studio TypeScript typecheck");
     assert.ok(content.includes("npm run test"), "Must execute automated test suite");
     assert.ok(content.includes("npm run build"), "Must execute Next.js static build");
   });

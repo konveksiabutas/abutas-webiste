@@ -46,17 +46,26 @@ jobs:
         with:
           node-version: 22
           cache: "npm"
+          cache-dependency-path: |
+            package-lock.json
+            studio/package-lock.json
 
-      # 3. Clean install dependencies dari package-lock.json
-      - name: Install Dependencies
+      # 3. Clean install dependencies dari package-lock.json (Root & Sanity Studio)
+      - name: Install Root Dependencies
         run: npm ci
+
+      - name: Install Sanity Studio Dependencies
+        run: npm ci --prefix studio
 
       # 4. Verifikasi kualitas kode (Hard Gates)
       - name: Run ESLint
         run: npm run lint
 
-      - name: Run TypeScript Typecheck
+      - name: Run TypeScript Typecheck (Root)
         run: npm run typecheck
+
+      - name: Run TypeScript Typecheck (Sanity Studio)
+        run: npm run studio:typecheck
 
       - name: Run Automated Test Suite
         run: npm run test
