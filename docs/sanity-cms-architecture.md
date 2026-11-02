@@ -225,3 +225,49 @@ Untuk mengaktifkan sinkronisasi konten riil:
    # Studio akan live di: https://abutas.sanity.studio
    ```
 
+---
+
+## 6. Keputusan Arsitektur Admin CMS: Sanity Studio Mandiri pada admin.abutas.com (Opsi A)
+
+Sesuai keputusan pemilik proyek pada Step 03C.2B, panel admin konten untuk ABUTAS.COM menggunakan **Opsi A: Sanity Studio dengan branding Abutas yang di-host mandiri pada subdomain `admin.abutas.com`**.
+
+Tidak ada dashboard admin kustom yang dibangun dari nol. Studio memanfaatkan keandalan, keamanan, dan fitur kolaboratif bawaan Sanity dengan tata kelola teknis sebagai berikut:
+
+### A. Rencana Teknis & Spesifikasi Implementasi
+1. **Branding Sanity Studio**:
+   - Judul workspace dan antarmuka Studio menggunakan identitas resmi "ABUTAS Studio".
+   - Warna aksen dan logo diselaraskan dengan palet modern industrial per `DESIGN.md`.
+2. **Deploy Static Build ke Subdomain cPanel (`admin.abutas.com`)**:
+   - Kompilasi static studio dijalankan via `npm run studio:build` menghasilkan berkas statis di `studio/dist/`.
+   - Berkas statis diunggah ke document root subdomain cPanel (misal: `public_html/admin/` atau direktori terpisah `admin.abutas.com/`).
+3. **Autentikasi Pengguna**:
+   - Menggunakan mekanisme autentikasi resmi bawaan Sanity Cloud (SSO Google, GitHub, atau e-mail terdaftar).
+   - Menghilangkan risiko keamanan manajemen password dan penyimpanan sesi di shared hosting.
+4. **Konfigurasi CORS Sanity API**:
+   - Diatur melalui dashboard Sanity (`https://www.sanity.io/manage` -> Project -> API -> CORS Origins):
+     - `https://admin.abutas.com` (Credentials: Enabled)
+     - `https://abutas.com` (Credentials: Disabled/Enabled sesuai kebutuhan fetch)
+     - `http://localhost:3333` (Pengembangan lokal)
+     - `http://localhost:3000` (Next.js development)
+5. **SPA Routing & SSL pada cPanel**:
+   - Disediakan berkas `.htaccess` di document root subdomain admin untuk penanganan client-side routing SPA (Single Page Application):
+     ```apache
+     <IfModule mod_rewrite.c>
+       RewriteEngine On
+       RewriteBase /
+       RewriteRule ^index\.html$ - [L]
+       RewriteCond %{REQUEST_FILENAME} !-f
+       RewriteCond %{REQUEST_FILENAME} !-d
+       RewriteRule . /index.html [L]
+     </IfModule>
+     ```
+   - SSL aktif secara otomatis melalui cPanel AutoSSL / Sectigo / Let's Encrypt.
+6. **Pengelolaan Konten Sesuai Skema**:
+   - Menggunakan 3 pilar skema terverifikasi:
+     - *Artikel & Panduan* (`article.ts`)
+     - *Portofolio Produksi* (`portfolio.ts` dengan perlindungan hak rilis klien)
+     - *Pengaturan Website* (`siteSettings.ts` dengan perlindungan verifikasi kontak)
+
+*Catatan Tata Kelola: Deployment subdomain admin saat ini masih dalam status tertunda (non-aktif) dan akan dieksekusi bersamaan dengan deployment hosting resmi.*
+
+
