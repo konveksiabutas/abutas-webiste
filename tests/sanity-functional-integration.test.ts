@@ -16,21 +16,53 @@ import {
 test("Step 03B.2: Sanity CMS Real Functional & Integration Verification", async (t) => {
   const rootDir = process.cwd();
 
-  await t.test("1. Project ID and Dataset consistency between Next.js and Sanity Studio", () => {
+  await t.test("1. Project ID and Dataset consistency between Next.js and Sanity Studio", (subtest) => {
     const envLocalPath = path.resolve(rootDir, ".env.local");
     const studioEnvPath = path.resolve(rootDir, "studio/.env");
 
-    assert.ok(fs.existsSync(envLocalPath), ".env.local must exist");
-    assert.ok(fs.existsSync(studioEnvPath), "studio/.env must exist");
+    const hasEnvLocal = fs.existsSync(envLocalPath);
+    const hasStudioEnv = fs.existsSync(studioEnvPath);
 
-    const envLocal = fs.readFileSync(envLocalPath, "utf8");
-    const studioEnv = fs.readFileSync(studioEnvPath, "utf8");
+    let nextProjectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID?.trim();
+    let nextDataset = process.env.NEXT_PUBLIC_SANITY_DATASET?.trim();
+    let studioProjectId = process.env.SANITY_STUDIO_PROJECT_ID?.trim();
+    let studioDataset = process.env.SANITY_STUDIO_DATASET?.trim();
 
-    const nextProjectId = envLocal.match(/NEXT_PUBLIC_SANITY_PROJECT_ID=(.+)/)?.[1]?.trim();
-    const nextDataset = envLocal.match(/NEXT_PUBLIC_SANITY_DATASET=(.+)/)?.[1]?.trim();
+    if (hasEnvLocal) {
+      const envLocal = fs.readFileSync(envLocalPath, "utf8");
+      nextProjectId = envLocal.match(/NEXT_PUBLIC_SANITY_PROJECT_ID=(.+)/)?.[1]?.trim() || nextProjectId;
+      nextDataset = envLocal.match(/NEXT_PUBLIC_SANITY_DATASET=(.+)/)?.[1]?.trim() || nextDataset;
+    }
 
-    const studioProjectId = studioEnv.match(/SANITY_STUDIO_PROJECT_ID=(.+)/)?.[1]?.trim();
-    const studioDataset = studioEnv.match(/SANITY_STUDIO_DATASET=(.+)/)?.[1]?.trim();
+    if (hasStudioEnv) {
+      const studioEnv = fs.readFileSync(studioEnvPath, "utf8");
+      studioProjectId = studioEnv.match(/SANITY_STUDIO_PROJECT_ID=(.+)/)?.[1]?.trim() || studioProjectId;
+      studioDataset = studioEnv.match(/SANITY_STUDIO_DATASET=(.+)/)?.[1]?.trim() || studioDataset;
+    }
+
+    const isCI = process.env.CI === "true" || process.env.GITHUB_ACTIONS === "true";
+
+    if (!isCI) {
+      assert.ok(hasEnvLocal, ".env.local must exist in local development environment");
+      assert.ok(hasStudioEnv, "studio/.env must exist in local development environment");
+    } else {
+      assert.ok(
+        nextProjectId,
+        "FATAL: NEXT_PUBLIC_SANITY_PROJECT_ID is required in CI/production workflow (configure Repository Variable/Secret SANITY_PROJECT_ID)"
+      );
+      assert.ok(
+        studioProjectId,
+        "FATAL: SANITY_STUDIO_PROJECT_ID is required in CI/production workflow (configure Repository Variable/Secret SANITY_PROJECT_ID)"
+      );
+      assert.ok(
+        nextDataset,
+        "FATAL: NEXT_PUBLIC_SANITY_DATASET is required in CI/production workflow"
+      );
+      assert.ok(
+        studioDataset,
+        "FATAL: SANITY_STUDIO_DATASET is required in CI/production workflow"
+      );
+    }
 
     assert.ok(nextProjectId, "Next.js must have a configured Sanity Project ID");
     assert.ok(studioProjectId, "Studio must have a configured Sanity Project ID");
@@ -51,12 +83,23 @@ test("Step 03B.2: Sanity CMS Real Functional & Integration Verification", async 
 
   await t.test("2. Real Sanity API connection responds with HTTP 200", async () => {
     const envLocalPath = path.resolve(rootDir, ".env.local");
-    const envLocal = fs.readFileSync(envLocalPath, "utf8");
-    const projectId = envLocal.match(/NEXT_PUBLIC_SANITY_PROJECT_ID=(.+)/)?.[1]?.trim();
-    const dataset = envLocal.match(/NEXT_PUBLIC_SANITY_DATASET=(.+)/)?.[1]?.trim();
+    let projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID?.trim();
+    let dataset = process.env.NEXT_PUBLIC_SANITY_DATASET?.trim();
 
-    assert.ok(projectId);
-    assert.ok(dataset);
+    if (fs.existsSync(envLocalPath)) {
+      const envLocal = fs.readFileSync(envLocalPath, "utf8");
+      projectId = envLocal.match(/NEXT_PUBLIC_SANITY_PROJECT_ID=(.+)/)?.[1]?.trim() || projectId;
+      dataset = envLocal.match(/NEXT_PUBLIC_SANITY_DATASET=(.+)/)?.[1]?.trim() || dataset;
+    }
+
+    assert.ok(
+      projectId,
+      "FATAL: Sanity Project ID must be provided to verify real API connection"
+    );
+    assert.ok(
+      dataset,
+      "FATAL: Sanity Dataset must be provided to verify real API connection"
+    );
 
     const queryUrl = `https://${projectId}.api.sanity.io/v2024-01-01/data/query/${dataset}?query=*[_type in ["article", "portfolio", "siteSettings"]]`;
     const response = await fetch(queryUrl);
@@ -68,9 +111,23 @@ test("Step 03B.2: Sanity CMS Real Functional & Integration Verification", async 
 
   await t.test("3. Production dataset is protected from fake/unverified published content", async () => {
     const envLocalPath = path.resolve(rootDir, ".env.local");
-    const envLocal = fs.readFileSync(envLocalPath, "utf8");
-    const projectId = envLocal.match(/NEXT_PUBLIC_SANITY_PROJECT_ID=(.+)/)?.[1]?.trim();
-    const dataset = envLocal.match(/NEXT_PUBLIC_SANITY_DATASET=(.+)/)?.[1]?.trim();
+    let projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID?.trim();
+    let dataset = process.env.NEXT_PUBLIC_SANITY_DATASET?.trim();
+
+    if (fs.existsSync(envLocalPath)) {
+      const envLocal = fs.readFileSync(envLocalPath, "utf8");
+      projectId = envLocal.match(/NEXT_PUBLIC_SANITY_PROJECT_ID=(.+)/)?.[1]?.trim() || projectId;
+      dataset = envLocal.match(/NEXT_PUBLIC_SANITY_DATASET=(.+)/)?.[1]?.trim() || dataset;
+    }
+
+    assert.ok(
+      projectId,
+      "FATAL: Sanity Project ID must be provided to verify production dataset safety"
+    );
+    assert.ok(
+      dataset,
+      "FATAL: Sanity Dataset must be provided to verify production dataset safety"
+    );
 
     const queryUrl = `https://${projectId}.api.sanity.io/v2024-01-01/data/query/${dataset}?query=*[_type in ["article", "portfolio"]]`;
     const response = await fetch(queryUrl);
