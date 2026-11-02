@@ -32,6 +32,11 @@ test("Step 03B: Sanity Studio Setup & Real Integration Verification", async (t) 
     assert.ok(pkg.dependencies["@sanity/vision"], "Studio must include @sanity/vision plugin");
     assert.ok(pkg.scripts.build, "Studio must have build script");
     assert.ok(pkg.scripts.dev, "Studio must have dev script");
+
+    const configContent = fs.readFileSync(studioConfigPath, "utf8");
+    assert.ok(configContent.includes("ABUTAS Content Studio"), "Studio title must be 'ABUTAS Content Studio'");
+    assert.ok(configContent.includes("AbutasStudioLogo"), "Studio must use AbutasStudioLogo");
+    assert.ok(configContent.includes("AbutasStudioIcon"), "Studio must use AbutasStudioIcon");
   });
 
   await t.test("2. Studio Desk Structure implements exactly three mandatory menus", () => {
@@ -173,6 +178,11 @@ test("Step 03B: Sanity Studio Setup & Real Integration Verification", async (t) 
     }
     const html = fs.readFileSync(distIndexPath, "utf8");
     assert.ok(html.includes("sanity"), "Compiled studio index must contain Sanity bundle references");
+
+    const htaccessPath = path.resolve(rootDir, "studio/dist/.htaccess");
+    assert.ok(fs.existsSync(htaccessPath), "studio/dist/.htaccess must exist for SPA routing fallback");
+    const htaccess = fs.readFileSync(htaccessPath, "utf8");
+    assert.ok(htaccess.includes("RewriteRule . /index.html"), "studio/dist/.htaccess must include SPA fallback rewrite");
   });
 
   await t.test("7. Root package.json exposes convenient studio commands", () => {

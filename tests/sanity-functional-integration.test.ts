@@ -16,7 +16,7 @@ import {
 test("Step 03B.2: Sanity CMS Real Functional & Integration Verification", async (t) => {
   const rootDir = process.cwd();
 
-  await t.test("1. Project ID and Dataset consistency between Next.js and Sanity Studio", (subtest) => {
+  await t.test("1. Project ID and Dataset consistency between Next.js and Sanity Studio", () => {
     const envLocalPath = path.resolve(rootDir, ".env.local");
     const studioEnvPath = path.resolve(rootDir, "studio/.env");
 

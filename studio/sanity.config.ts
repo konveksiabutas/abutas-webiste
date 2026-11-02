@@ -3,10 +3,20 @@ import { structureTool } from "sanity/structure";
 import { visionTool } from "@sanity/vision";
 import { schemaTypes } from "./schemas";
 import { structure } from "./structure";
+import { AbutasStudioLogo, AbutasStudioIcon } from "./components/BrandLogo";
 
 export default defineConfig({
-  name: "abutas-studio",
-  title: "ABUTAS Creative Manufacturing Studio",
+  name: "abutas-content-studio",
+  title: "ABUTAS Content Studio",
+  subtitle: "Creative Manufacturing Admin",
+
+  icon: AbutasStudioIcon,
+
+  studio: {
+    components: {
+      logo: AbutasStudioLogo,
+    },
+  },
 
   // Menggunakan Project ID resmi dari environment variable pemilik
   projectId: process.env.SANITY_STUDIO_PROJECT_ID || "placeholder-project",
