@@ -10,6 +10,8 @@ export interface ValidationRule {
   required: () => ValidationRule;
   max: (limit: number) => ValidationRule;
   min: (limit: number) => ValidationRule;
+  custom: (fn: (value: unknown) => true | string | Promise<true | string>) => ValidationRule;
+  regex?: (pattern: RegExp, options?: { name?: string; invert?: boolean }) => ValidationRule;
   error?: (message: string) => ValidationRule;
   warning?: (message: string) => ValidationRule;
   [key: string]: unknown;

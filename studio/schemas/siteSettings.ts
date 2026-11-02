@@ -32,7 +32,16 @@ export const siteSettings = defineType({
       name: "whatsappNumber",
       title: "Nomor WhatsApp Business",
       type: "string",
-      description: "Format internasional tanpa spasi atau tanda tambah (contoh: 6281234567890).",
+      description: "Format internasional tanpa spasi atau tanda tambah (contoh: 6281285689538).",
+      initialValue: "6281285689538",
+      validation: (Rule) =>
+        Rule.custom((val: unknown) => {
+          if (!val) return true;
+          if (typeof val !== "string") return "Format nomor tidak valid.";
+          return /^62\d{9,13}$/.test(val)
+            ? true
+            : "Nomor WhatsApp harus berformat internasional diawali '62' tanpa spasi atau tanda tambah (contoh: 6281285689538).";
+        }),
     }),
     defineField({
       name: "whatsappVerified",

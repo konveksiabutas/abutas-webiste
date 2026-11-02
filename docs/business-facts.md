@@ -22,7 +22,7 @@ Aturan Penggunaan: Setiap informasi diklasifikasikan ke dalam 4 status resmi unt
 | **Pilar 2: Konveksi Pakaian** | VERIFIED | Layanan Konveksi Pakaian & Seragam | Pilar utama B2B (`/konveksi-pakaian/`). |
 | **Entitas Legal (PT/CV)** | UNVERIFIED | *Belum disediakan* | Jangan cantumkan nama badan hukum fiktif. |
 | **Logo Vektor Resmi** | UNVERIFIED | *Belum disediakan* | Gunakan text wordmark "ABUTAS" berlabel dev placeholder. |
-| **Nomor Telepon / WhatsApp** | UNVERIFIED | *Belum disediakan* | Menggunakan template parameter wa.me tanpa nomor palsu; tombol berlabel pra-rilis. |
+| **Nomor Telepon / WhatsApp** | VERIFIED | +62 812-8568-9538 (6281285689538) | Dikonfirmasi resmi oleh pemilik bisnis pada 3 November 2026. Tautan resmi: `https://wa.me/6281285689538`. |
 | **Email Resmi** | UNVERIFIED | *Belum disediakan* | Menggunakan placeholder `info@abutas.com` hingga mailbox dikonfigurasi di cPanel. |
 | **Alamat Workshop / Kantor Fisik** | UNVERIFIED | *Belum disediakan* | Dilarang membuat alamat jalan, peta, atau koordinat fiktif. |
 | **Area Layanan Operasional** | UNVERIFIED | Hipotesis Jabodetabek & Nasional | Jangan klaim cabang/kantor perwakilan di berbagai kota. |

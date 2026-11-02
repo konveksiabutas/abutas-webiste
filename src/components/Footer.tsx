@@ -1,7 +1,9 @@
 import React from "react";
 import Link from "next/link";
+import { getEffectiveBusinessConfig } from "@/lib/sanity";
 
-export function Footer() {
+export async function Footer() {
+  const config = await getEffectiveBusinessConfig();
   return (
     <footer className="border-t border-line-dark bg-[#0E1112] text-[#959E9F] py-14 sm:py-16 text-xs sm:text-sm">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
@@ -88,6 +90,18 @@ export function Footer() {
             </h3>
             <ul className="space-y-2.5 text-xs sm:text-sm">
               <li>
+                <a
+                  href={config.whatsapp.directUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-white transition-colors flex items-center gap-2"
+                >
+                  <span className="font-extrabold text-action text-xs font-mono">WA:</span>
+                  <span>{config.whatsapp.display}</span>
+                  <span className="text-[10px]" aria-hidden="true">↗</span>
+                </a>
+              </li>
+              <li>
                 <Link
                   href="/kontak/"
                   className="hover:text-white transition-colors flex items-center gap-2"
@@ -100,7 +114,7 @@ export function Footer() {
                 </Link>
               </li>
               <li className="pt-1 text-[11px] text-[#7A8385] leading-relaxed">
-                Saluran komunikasi resmi (WhatsApp Business &amp; Mailbox) dalam proses verifikasi aktivasi.
+                Mailbox email resmi (info@abutas.com) dalam proses aktivasi di hosting cPanel.
               </li>
             </ul>
           </div>

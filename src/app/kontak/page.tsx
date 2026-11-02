@@ -3,6 +3,8 @@ import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { RfqContactForm } from "@/components/RfqContactForm";
+import { getEffectiveBusinessConfig } from "@/lib/sanity";
+import { getWhatsAppConsultationUrl } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Kontak Kami & Permintaan Penawaran | ABUTAS",
@@ -22,7 +24,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function KontakPage() {
+export default async function KontakPage() {
+  const businessConfig = await getEffectiveBusinessConfig();
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -114,23 +117,26 @@ export default function KontakPage() {
                         </svg>
                       </div>
                       <div>
-                        <h3 className="text-base font-bold text-ink">Saluran WhatsApp</h3>
+                        <h3 className="text-base font-bold text-ink">WhatsApp Resmi</h3>
                         <span className="text-[11px] font-bold text-action bg-action-subtle/20 px-1.5 py-0.5 rounded">
-                          Tahap Aktivasi Nomor
+                          {businessConfig.whatsapp.verified ? "Resmi Terverifikasi" : "Belum Terverifikasi"}
                         </span>
                       </div>
                     </div>
                     <p className="text-xs text-muted leading-relaxed sm:text-sm">
-                      Nomor WhatsApp Business resmi sedang dalam proses verifikasi aktivasi. Anda dapat menggunakan tautan di bawah untuk menguji pratinjau format draf pesan.
+                      Hubungi tim konsultasi kami langsung via WhatsApp resmi untuk mendiskusikan konsep produk, pemilihan bahan kain/tas, serta penawaran biaya produksi.
                     </p>
-                    <div className="mt-4 pt-3 border-t border-line-light">
+                    <div className="mt-4 pt-3 border-t border-line-light flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <span className="text-sm font-extrabold text-ink font-mono">
+                        {businessConfig.whatsapp.display}
+                      </span>
                       <a
-                        href="https://wa.me/?text=Halo%20ABUTAS%2C%20saya%20ingin%20konsultasi%20produksi%20custom"
+                        href={getWhatsAppConsultationUrl("Halo ABUTAS, saya ingin konsultasi mengenai produksi konveksi custom.", businessConfig.whatsapp.numeric)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-action hover:underline"
                       >
-                        <span>Uji Draf Format Pesan</span>
+                        <span>Chat WhatsApp</span>
                         <span aria-hidden="true">&rarr;</span>
                       </a>
                     </div>
@@ -184,7 +190,10 @@ export default function KontakPage() {
 
                 {/* Right Column: RFQ Form */}
                 <div className="lg:col-span-7">
-                  <RfqContactForm />
+                  <RfqContactForm
+                    whatsappNumeric={businessConfig.whatsapp.numeric}
+                    whatsappDisplay={businessConfig.whatsapp.display}
+                  />
                 </div>
 
               </div>

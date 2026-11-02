@@ -15,6 +15,7 @@ import {
   siteSettingsQuery,
 } from "./queries.ts";
 import type { SanityArticle, SanityPortfolio, SanitySiteSettings, SanitySlug } from "./types.ts";
+import { BUSINESS_CONFIG, formatWhatsAppDisplay } from "../constants.ts";
 
 /**
  * Normalisasi objek slug Sanity `{ current: string }` atau string biasa.
@@ -113,4 +114,70 @@ export async function getSiteSettings(): Promise<SanitySiteSettings | null> {
     console.warn("[Sanity CMS] Tidak dapat mengambil profil situs:", error);
     return null;
   }
+}
+
+export interface EffectiveBusinessConfig {
+  brandName: string;
+  tagline: string;
+  domain: string;
+  canonicalUrl: string;
+  whatsapp: {
+    display: string;
+    numeric: string;
+    directUrl: string;
+    verified: boolean;
+    source: "cms" | "verified_fallback";
+  };
+  email: {
+    address: string;
+    verified: boolean;
+    source: "cms" | "fallback";
+  };
+}
+
+/**
+ * Mengambil konfigurasi bisnis efektif untuk static build.
+ * Mengutamakan data Sanity siteSettings jika whatsappVerified bernilai true.
+ * Jika Sanity belum terkonfigurasi, bernilai null, atau belum diverifikasi,
+ * menggunakan fallback terverifikasi dari BUSINESS_CONFIG (docs/business-facts.md).
+ */
+export async function getEffectiveBusinessConfig(): Promise<EffectiveBusinessConfig> {
+  const settings = await getSiteSettings();
+
+  if (settings && settings.whatsappNumber && settings.whatsappVerified === true) {
+    const numeric = settings.whatsappNumber.replace(/\D/g, "");
+    return {
+      brandName: settings.brandName || BUSINESS_CONFIG.brandName,
+      tagline: settings.tagline || BUSINESS_CONFIG.tagline,
+      domain: BUSINESS_CONFIG.domain,
+      canonicalUrl: BUSINESS_CONFIG.canonicalUrl,
+      whatsapp: {
+        numeric,
+        display: formatWhatsAppDisplay(numeric),
+        directUrl: `https://wa.me/${numeric}`,
+        verified: true,
+        source: "cms",
+      },
+      email: {
+        address: settings.officialEmail || BUSINESS_CONFIG.email.address,
+        verified: Boolean(settings.emailVerified),
+        source: settings.officialEmail ? "cms" : "fallback",
+      },
+    };
+  }
+
+  return {
+    brandName: BUSINESS_CONFIG.brandName,
+    tagline: BUSINESS_CONFIG.tagline,
+    domain: BUSINESS_CONFIG.domain,
+    canonicalUrl: BUSINESS_CONFIG.canonicalUrl,
+    whatsapp: {
+      ...BUSINESS_CONFIG.whatsapp,
+      source: "verified_fallback",
+    },
+    email: {
+      ...BUSINESS_CONFIG.email,
+      source: "fallback",
+    },
+  };
 }

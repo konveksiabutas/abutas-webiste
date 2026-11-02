@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert";
 import fs from "node:fs";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 
 test("Step 02B: Supporting Website Pages Verification", async (t) => {
   const rootDir = process.cwd();
@@ -45,10 +46,33 @@ test("Step 02B: Supporting Website Pages Verification", async (t) => {
   await t.test("Kontak page provides RFQ form and transparent consultation flow", () => {
     const content = fs.readFileSync(kontakPath, "utf8");
     const rfqContent = fs.readFileSync(path.resolve(rootDir, "src/components/RfqContactForm.tsx"), "utf8");
+    const constantsPath = path.resolve(rootDir, "src/lib/constants.ts");
+    assert.ok(fs.existsSync(constantsPath), "src/lib/constants.ts must exist");
+    const constantsContent = fs.readFileSync(constantsPath, "utf8");
+    assert.ok(constantsContent.includes("6281285689538"), "constants must include confirmed numeric whatsapp");
+    assert.ok(constantsContent.includes("+62 812-8568-9538"), "constants must include formatted whatsapp");
     assert.ok(content.includes("<h1"), "Must contain <h1 tag");
     assert.ok(content.includes("https://abutas.com/kontak/"), "Must specify canonical URL");
     assert.ok(content.includes("RfqContactForm"), "Must embed RfqContactForm");
-    assert.ok(rfqContent.includes("wa.me/?text="), "RFQ form must format direct WhatsApp message");
+    assert.ok(
+      rfqContent.includes("wa.me/${whatsappNumeric}?text="),
+      "RFQ form must format direct WhatsApp message using whatsappNumeric prop"
+    );
+    assert.ok(
+      rfqContent.includes("BUSINESS_CONFIG.whatsapp.numeric"),
+      "RFQ form must provide default fallback to BUSINESS_CONFIG.whatsapp.numeric"
+    );
+  });
+
+  await t.test("Business contact configuration and CMS data access layer integrity", async () => {
+    const dataModuleUrl = pathToFileURL(path.resolve(rootDir, "src/lib/sanity/data.ts")).href;
+    const { getEffectiveBusinessConfig } = await import(dataModuleUrl);
+    const config = await getEffectiveBusinessConfig();
+    assert.strictEqual(typeof config.whatsapp.numeric, "string");
+    assert.strictEqual(typeof config.whatsapp.display, "string");
+    assert.ok(config.whatsapp.directUrl.startsWith("https://wa.me/"));
+    assert.strictEqual(config.whatsapp.verified, true);
+    assert.ok(["cms", "verified_fallback"].includes(config.whatsapp.source));
   });
 
   await t.test("Cara Pesan page explains 5-step workflow without unverified promises", () => {

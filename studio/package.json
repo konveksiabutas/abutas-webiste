@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "sanity dev",
     "start": "sanity start",
-    "build": "sanity build && node -e \"const fs = require('fs'); if (fs.existsSync('static/.htaccess')) fs.copyFileSync('static/.htaccess', 'dist/.htaccess');\"",
+    "build": "sanity build && node -e \"const fs = require('fs'); if (fs.existsSync('static/.htaccess')) { fs.copyFileSync('static/.htaccess', 'dist/.htaccess'); if (fs.existsSync('dist/static/.htaccess')) fs.unlinkSync('dist/static/.htaccess'); }\"",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

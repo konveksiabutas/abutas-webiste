@@ -1,8 +1,17 @@
 "use client";
 
 import React, { useState } from "react";
+import { BUSINESS_CONFIG } from "@/lib/constants";
 
-export function RfqContactForm() {
+interface RfqContactFormProps {
+  whatsappNumeric?: string;
+  whatsappDisplay?: string;
+}
+
+export function RfqContactForm({
+  whatsappNumeric = BUSINESS_CONFIG.whatsapp.numeric,
+  whatsappDisplay = BUSINESS_CONFIG.whatsapp.display,
+}: RfqContactFormProps = {}) {
   const [formData, setFormData] = useState({
     name: "",
     company: "",
@@ -64,11 +73,11 @@ export function RfqContactForm() {
           Susun spesifikasi rencana pesanan tas atau pakaian custom Anda untuk mempermudah perhitungan penawaran harga.
         </p>
 
-        {/* Development & Staging Notice */}
+        {/* Consultation Flow Notice */}
         <div className="mt-4 rounded-lg border border-action/20 bg-action-subtle/10 p-3.5 text-xs text-ink/90 flex items-start gap-2.5">
           <span className="text-action font-bold shrink-0 mt-0.5">ℹ</span>
           <p className="leading-relaxed">
-            <strong>Mode Pengujian Formulir (Staging):</strong> Saluran WhatsApp Business dan sistem mailbox resmi sedang dalam tahap aktivasi akhir. Formulir ini menyusun draf rincian pesanan secara lokal agar dapat disalin atau diuji melalui pratinjau teks.
+            <strong>Alur Konsultasi &amp; Penawaran:</strong> Susun spesifikasi pesanan Anda melalui formulir di bawah ini. Setelah draf ringkasan tersusun, Anda dapat langsung meneruskannya ke WhatsApp resmi Abutas ({whatsappDisplay}) atau menyalinnya ke clipboard.
           </p>
         </div>
       </div>
@@ -205,27 +214,27 @@ export function RfqContactForm() {
           </pre>
 
           <div className="mt-4 flex flex-wrap gap-3 items-center">
+            <a
+              href={`https://wa.me/${whatsappNumeric}?text=${encodeURIComponent(generatedSummary)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-[42px] items-center gap-1.5 rounded-md bg-action px-5 text-xs font-bold uppercase tracking-wider text-white shadow-xs hover:bg-action-hover transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action cursor-pointer"
+            >
+              <span>Kirim via WhatsApp ({whatsappDisplay})</span>
+              <span aria-hidden="true">↗</span>
+            </a>
+
             <button
               type="button"
               onClick={handleCopyClipboard}
-              className="inline-flex min-h-[42px] items-center gap-2 rounded-md bg-ink px-4 text-xs font-bold uppercase tracking-wider text-white hover:bg-black transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action"
+              className="inline-flex min-h-[42px] items-center gap-2 rounded-md border border-line-light bg-paper px-4 text-xs font-bold uppercase tracking-wider text-ink hover:bg-[#F2ECE3] hover:border-[#D0C9BD] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action"
             >
               <span>{copied ? "✓ Draf Berhasil Disalin" : "Salin Draf ke Clipboard"}</span>
             </button>
-
-            <a
-              href={`https://wa.me/?text=${encodeURIComponent(generatedSummary)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex min-h-[42px] items-center gap-1.5 rounded-md border border-line-light bg-paper px-4 text-xs font-bold uppercase tracking-wider text-muted hover:text-ink hover:border-[#D0C9BD] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action"
-            >
-              <span>Uji Template WhatsApp Browser</span>
-              <span aria-hidden="true">↗</span>
-            </a>
           </div>
 
           <div className="mt-3.5 rounded-md bg-canvas/80 p-3 border border-line-light/80 text-[11px] text-muted leading-relaxed">
-            <strong className="text-ink">Pemberitahuan Transparansi:</strong> Draf pesanan ini tidak dikirimkan otomatis karena nomor WhatsApp Business resmi sedang dalam tahap aktivasi. Tidak ada data yang tersimpan di server. Anda dapat menyimpan teks yang telah disalin untuk diteruskan saat saluran komunikasi resmi aktif.
+            <strong className="text-ink">Pemberitahuan Transparansi:</strong> Menekan tombol &quot;Kirim via WhatsApp&quot; akan membuka aplikasi WhatsApp resmi Abutas dengan pesan rincian pesanan yang telah terisi otomatis. Silakan tinjau kembali isian pesan lalu tekan tombol Send di aplikasi WhatsApp untuk menyelesaikan pengiriman. Tidak ada data pribadi yang disimpan di server.
           </div>
         </div>
       )}

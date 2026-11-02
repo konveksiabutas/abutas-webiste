@@ -8,7 +8,7 @@ Dokumen ini adalah panduan teknis langkah demi langkah bagi pemilik website untu
 
 ## 1. Ringkasan Arsitektur
 
-ABUTAS Content Studio dibangun menggunakan Sanity Studio v3 sebagai **Single Page Application (SPA) statis murni**. 
+ABUTAS Content Studio dibangun menggunakan Sanity Studio (paket `sanity` versi `6.21.x`, arsitektur Studio v3) sebagai **Single Page Application (SPA) statis murni**. 
 
 Keunggulan arsitektur ini:
 - **Zero Node.js di Server Hosting**: Tidak membutuhkan runtime Node.js, PM2, daemon proses, atau akses root VPS pada hosting Superserver cPanel.
@@ -134,3 +134,4 @@ Bila terdapat penambahan field skema baru, update visual Studio, atau penambahan
    ```
 3. Upload ulang file hasil build dari `studio/dist/` ke document root `admin.abutas.com` di cPanel (timpa file lama).
 4. Selesai. Pengguna Studio cukup me-refresh browser untuk mendapatkan versi terbaru.
+

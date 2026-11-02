@@ -11,12 +11,16 @@
   RewriteCond %{HTTPS} !=on
   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-  # 2. Pass existing files and directories directly
-  RewriteRule ^index\.html$ - [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
+  # 2. Existing files and directories are served directly
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
 
-  # 3. SPA Fallback: Route all non-file requests to index.html
+  # 3. Prevent broken static asset requests from falling back to index.html (return real 404)
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^static/ - [R=404,L]
+
+  # 4. SPA Fallback: Route all other non-file navigation requests to index.html
   RewriteRule . /index.html [L]
 </IfModule>
 
