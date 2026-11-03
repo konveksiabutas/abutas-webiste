@@ -102,6 +102,16 @@ export async function Footer() {
                 </a>
               </li>
               <li>
+                <a
+                  href={`mailto:${config.email.address}`}
+                  className="hover:text-white transition-colors flex items-center gap-2"
+                >
+                  <span className="font-extrabold text-action text-xs font-mono">EMAIL:</span>
+                  <span>{config.email.address}</span>
+                  <span className="text-[10px]" aria-hidden="true">↗</span>
+                </a>
+              </li>
+              <li>
                 <Link
                   href="/kontak/"
                   className="hover:text-white transition-colors flex items-center gap-2"
@@ -112,9 +122,6 @@ export async function Footer() {
                   </svg>
                   <span>Formulir Permintaan Penawaran</span>
                 </Link>
-              </li>
-              <li className="pt-1 text-[11px] text-[#7A8385] leading-relaxed">
-                Mailbox email resmi (info@abutas.com) dalam proses aktivasi di hosting cPanel.
               </li>
             </ul>
           </div>

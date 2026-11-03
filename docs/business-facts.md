@@ -23,7 +23,7 @@ Aturan Penggunaan: Setiap informasi diklasifikasikan ke dalam 4 status resmi unt
 | **Entitas Legal (PT/CV)** | UNVERIFIED | *Belum disediakan* | Jangan cantumkan nama badan hukum fiktif. |
 | **Logo Vektor Resmi** | UNVERIFIED | *Belum disediakan* | Gunakan text wordmark "ABUTAS" berlabel dev placeholder. |
 | **Nomor Telepon / WhatsApp** | VERIFIED | +62 812-8568-9538 (6281285689538) | Dikonfirmasi resmi oleh pemilik bisnis pada 3 November 2026. Tautan resmi: `https://wa.me/6281285689538`. |
-| **Email Resmi** | UNVERIFIED | *Belum disediakan* | Menggunakan placeholder `info@abutas.com` hingga mailbox dikonfigurasi di cPanel. |
+| **Email Resmi** | VERIFIED | info@abutas.com | Mailbox resmi telah dibuat dan aktif di cPanel Superserver per 3 November 2026. Tautan resmi: `mailto:info@abutas.com`. Uji deliverability (inbound/outbound/SPF/DKIM/DMARC) menjadi checklist operasional pemilik. |
 | **Alamat Workshop / Kantor Fisik** | UNVERIFIED | *Belum disediakan* | Dilarang membuat alamat jalan, peta, atau koordinat fiktif. |
 | **Area Layanan Operasional** | UNVERIFIED | Hipotesis Jabodetabek & Nasional | Jangan klaim cabang/kantor perwakilan di berbagai kota. |
 

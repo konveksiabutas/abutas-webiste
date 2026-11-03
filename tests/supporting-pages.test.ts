@@ -51,6 +51,7 @@ test("Step 02B: Supporting Website Pages Verification", async (t) => {
     const constantsContent = fs.readFileSync(constantsPath, "utf8");
     assert.ok(constantsContent.includes("6281285689538"), "constants must include confirmed numeric whatsapp");
     assert.ok(constantsContent.includes("+62 812-8568-9538"), "constants must include formatted whatsapp");
+    assert.ok(constantsContent.includes("info@abutas.com"), "constants must include official email address");
     assert.ok(content.includes("<h1"), "Must contain <h1 tag");
     assert.ok(content.includes("https://abutas.com/kontak/"), "Must specify canonical URL");
     assert.ok(content.includes("RfqContactForm"), "Must embed RfqContactForm");
@@ -59,8 +60,16 @@ test("Step 02B: Supporting Website Pages Verification", async (t) => {
       "RFQ form must format direct WhatsApp message using whatsappNumeric prop"
     );
     assert.ok(
+      rfqContent.includes("mailto:${officialEmail}?subject="),
+      "RFQ form must provide mailto fallback with officialEmail prop"
+    );
+    assert.ok(
       rfqContent.includes("BUSINESS_CONFIG.whatsapp.numeric"),
       "RFQ form must provide default fallback to BUSINESS_CONFIG.whatsapp.numeric"
+    );
+    assert.ok(
+      rfqContent.includes("BUSINESS_CONFIG.email.address"),
+      "RFQ form must provide default fallback to BUSINESS_CONFIG.email.address"
     );
   });
 
@@ -73,6 +82,15 @@ test("Step 02B: Supporting Website Pages Verification", async (t) => {
     assert.ok(config.whatsapp.directUrl.startsWith("https://wa.me/"));
     assert.strictEqual(config.whatsapp.verified, true);
     assert.ok(["cms", "verified_fallback"].includes(config.whatsapp.source));
+
+    assert.strictEqual(typeof config.email.address, "string");
+    assert.ok(
+      config.email.address.endsWith("@abutas.com"),
+      "email address must belong to official abutas.com domain"
+    );
+    assert.strictEqual(config.email.mailtoUrl, `mailto:${config.email.address}`);
+    assert.strictEqual(config.email.verified, true);
+    assert.ok(["cms", "verified_fallback"].includes(config.email.source));
   });
 
   await t.test("Cara Pesan page explains 5-step workflow without unverified promises", () => {

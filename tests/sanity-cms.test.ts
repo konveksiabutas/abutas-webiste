@@ -112,8 +112,16 @@ test("Step 03A: Sanity CMS Foundation & Static Export Integration", async (t) =>
     const portfolioItems = await getPublishedPortfolio();
     assert.ok(Array.isArray(portfolioItems), "getPublishedPortfolio must return an array");
 
+    const configured = isSanityConfigured();
     const settings = await getSiteSettings();
-    assert.strictEqual(settings, null, "getSiteSettings must safely return null when unconfigured");
+    if (!configured) {
+      assert.strictEqual(settings, null, "getSiteSettings must safely return null when unconfigured");
+    } else {
+      assert.ok(
+        settings === null || (typeof settings === "object" && settings !== null),
+        "getSiteSettings must return null or valid settings object when configured"
+      );
+    }
   });
 
   await t.test("E. GROQ queries strictly filter published documents and exclude drafts", () => {

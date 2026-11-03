@@ -6,11 +6,13 @@ import { BUSINESS_CONFIG } from "@/lib/constants";
 interface RfqContactFormProps {
   whatsappNumeric?: string;
   whatsappDisplay?: string;
+  officialEmail?: string;
 }
 
 export function RfqContactForm({
   whatsappNumeric = BUSINESS_CONFIG.whatsapp.numeric,
   whatsappDisplay = BUSINESS_CONFIG.whatsapp.display,
+  officialEmail = BUSINESS_CONFIG.email.address,
 }: RfqContactFormProps = {}) {
   const [formData, setFormData] = useState({
     name: "",
@@ -77,7 +79,7 @@ export function RfqContactForm({
         <div className="mt-4 rounded-lg border border-action/20 bg-action-subtle/10 p-3.5 text-xs text-ink/90 flex items-start gap-2.5">
           <span className="text-action font-bold shrink-0 mt-0.5">ℹ</span>
           <p className="leading-relaxed">
-            <strong>Alur Konsultasi &amp; Penawaran:</strong> Susun spesifikasi pesanan Anda melalui formulir di bawah ini. Setelah draf ringkasan tersusun, Anda dapat langsung meneruskannya ke WhatsApp resmi Abutas ({whatsappDisplay}) atau menyalinnya ke clipboard.
+            <strong>Alur Konsultasi &amp; Penawaran:</strong> Susun spesifikasi pesanan Anda melalui formulir di bawah ini. Setelah draf ringkasan tersusun, Anda dapat langsung meneruskannya ke WhatsApp resmi Abutas ({whatsappDisplay}), mengirimkannya via Email ({officialEmail}), atau menyalinnya ke clipboard.
           </p>
         </div>
       </div>
@@ -214,6 +216,7 @@ export function RfqContactForm({
           </pre>
 
           <div className="mt-4 flex flex-wrap gap-3 items-center">
+            {/* Opsi Utama: WhatsApp */}
             <a
               href={`https://wa.me/${whatsappNumeric}?text=${encodeURIComponent(generatedSummary)}`}
               target="_blank"
@@ -224,6 +227,19 @@ export function RfqContactForm({
               <span aria-hidden="true">↗</span>
             </a>
 
+            {/* Opsi Alternatif: Email */}
+            <a
+              href={`mailto:${officialEmail}?subject=${encodeURIComponent("Permintaan Penawaran (RFQ) Konveksi Custom — ABUTAS")}&body=${encodeURIComponent(generatedSummary)}`}
+              className="inline-flex min-h-[42px] items-center gap-1.5 rounded-md border border-line-light bg-paper px-4 text-xs font-bold uppercase tracking-wider text-ink hover:bg-[#F2ECE3] hover:border-[#D0C9BD] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action cursor-pointer"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+              <span>Kirim via Email</span>
+            </a>
+
+            {/* Opsi Salin Clipboard */}
             <button
               type="button"
               onClick={handleCopyClipboard}
@@ -234,7 +250,7 @@ export function RfqContactForm({
           </div>
 
           <div className="mt-3.5 rounded-md bg-canvas/80 p-3 border border-line-light/80 text-[11px] text-muted leading-relaxed">
-            <strong className="text-ink">Pemberitahuan Transparansi:</strong> Menekan tombol &quot;Kirim via WhatsApp&quot; akan membuka aplikasi WhatsApp resmi Abutas dengan pesan rincian pesanan yang telah terisi otomatis. Silakan tinjau kembali isian pesan lalu tekan tombol Send di aplikasi WhatsApp untuk menyelesaikan pengiriman. Tidak ada data pribadi yang disimpan di server.
+            <strong className="text-ink">Pemberitahuan Transparansi:</strong> Menekan tombol &quot;Kirim via WhatsApp&quot; atau &quot;Kirim via Email&quot; akan membuka aplikasi WhatsApp atau aplikasi email Anda dengan draf rincian pesanan yang telah terisi otomatis. Silakan periksa kembali isi pesan lalu tekan tombol Send di aplikasi untuk menyelesaikan pengiriman. Tidak ada data pribadi yang disimpan di server kami.
           </div>
         </div>
       )}

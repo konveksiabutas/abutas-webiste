@@ -153,17 +153,26 @@ export default async function KontakPage() {
                       </div>
                       <div>
                         <h3 className="text-base font-bold text-ink">Email Korespondensi</h3>
-                        <span className="text-[11px] font-bold text-[#7A8385] bg-[#EAE8E4] px-1.5 py-0.5 rounded">
-                          Tahap Konfigurasi Mailbox
+                        <span className="text-[11px] font-bold text-action bg-action-subtle/20 px-1.5 py-0.5 rounded">
+                          {businessConfig.email.verified ? "Resmi Terverifikasi" : "Tahap Konfigurasi Mailbox"}
                         </span>
                       </div>
                     </div>
                     <p className="text-xs text-muted leading-relaxed sm:text-sm">
-                      Alamat email resmi dipersiapkan untuk pertukaran dokumen resmi (RFQ) dan akan aktif setelah konfigurasi mailbox server cPanel rampung:
+                      Kirimkan dokumen Purchase Order (PO), berkas spesifikasi teknis desain, atau permintaan penawaran resmi langsung ke alamat email bisnis kami:
                     </p>
-                    <p className="mt-2 text-xs sm:text-sm font-mono font-bold text-ink">
-                      info@abutas.com <span className="text-[11px] font-normal text-muted">(Pra-Aktivasi)</span>
-                    </p>
+                    <div className="mt-4 pt-3 border-t border-line-light flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <span className="text-sm font-extrabold text-ink font-mono">
+                        {businessConfig.email.address}
+                      </span>
+                      <a
+                        href={`mailto:${businessConfig.email.address}`}
+                        className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-action hover:underline"
+                      >
+                        <span>Kirim Email</span>
+                        <span aria-hidden="true">&rarr;</span>
+                      </a>
+                    </div>
                   </div>
 
                   {/* Card 3: Operational Hours & Workshop Policy */}
@@ -193,6 +202,7 @@ export default async function KontakPage() {
                   <RfqContactForm
                     whatsappNumeric={businessConfig.whatsapp.numeric}
                     whatsappDisplay={businessConfig.whatsapp.display}
+                    officialEmail={businessConfig.email.address}
                   />
                 </div>
 

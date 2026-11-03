@@ -130,54 +130,46 @@ export interface EffectiveBusinessConfig {
   };
   email: {
     address: string;
+    mailtoUrl: string;
     verified: boolean;
-    source: "cms" | "fallback";
+    source: "cms" | "verified_fallback";
   };
 }
 
 /**
  * Mengambil konfigurasi bisnis efektif untuk static build.
- * Mengutamakan data Sanity siteSettings jika whatsappVerified bernilai true.
+ * Mengutamakan data Sanity siteSettings jika verification flag bernilai true.
  * Jika Sanity belum terkonfigurasi, bernilai null, atau belum diverifikasi,
  * menggunakan fallback terverifikasi dari BUSINESS_CONFIG (docs/business-facts.md).
  */
 export async function getEffectiveBusinessConfig(): Promise<EffectiveBusinessConfig> {
   const settings = await getSiteSettings();
 
-  if (settings && settings.whatsappNumber && settings.whatsappVerified === true) {
-    const numeric = settings.whatsappNumber.replace(/\D/g, "");
-    return {
-      brandName: settings.brandName || BUSINESS_CONFIG.brandName,
-      tagline: settings.tagline || BUSINESS_CONFIG.tagline,
-      domain: BUSINESS_CONFIG.domain,
-      canonicalUrl: BUSINESS_CONFIG.canonicalUrl,
-      whatsapp: {
-        numeric,
-        display: formatWhatsAppDisplay(numeric),
-        directUrl: `https://wa.me/${numeric}`,
-        verified: true,
-        source: "cms",
-      },
-      email: {
-        address: settings.officialEmail || BUSINESS_CONFIG.email.address,
-        verified: Boolean(settings.emailVerified),
-        source: settings.officialEmail ? "cms" : "fallback",
-      },
-    };
-  }
+  const isWaVerified = Boolean(settings?.whatsappNumber && settings?.whatsappVerified === true);
+  const waNumeric = isWaVerified
+    ? (settings?.whatsappNumber || "").replace(/\D/g, "")
+    : BUSINESS_CONFIG.whatsapp.numeric;
+
+  const isEmailVerified = Boolean(settings?.officialEmail && settings?.emailVerified === true);
+  const emailAddress = (isEmailVerified ? settings?.officialEmail : undefined) || BUSINESS_CONFIG.email.address;
 
   return {
-    brandName: BUSINESS_CONFIG.brandName,
-    tagline: BUSINESS_CONFIG.tagline,
+    brandName: settings?.brandName || BUSINESS_CONFIG.brandName,
+    tagline: settings?.tagline || BUSINESS_CONFIG.tagline,
     domain: BUSINESS_CONFIG.domain,
     canonicalUrl: BUSINESS_CONFIG.canonicalUrl,
     whatsapp: {
-      ...BUSINESS_CONFIG.whatsapp,
-      source: "verified_fallback",
+      numeric: waNumeric,
+      display: formatWhatsAppDisplay(waNumeric),
+      directUrl: `https://wa.me/${waNumeric}`,
+      verified: isWaVerified || BUSINESS_CONFIG.whatsapp.verified,
+      source: isWaVerified ? "cms" : "verified_fallback",
     },
     email: {
-      ...BUSINESS_CONFIG.email,
-      source: "fallback",
+      address: emailAddress,
+      mailtoUrl: `mailto:${emailAddress}`,
+      verified: isEmailVerified || BUSINESS_CONFIG.email.verified,
+      source: isEmailVerified ? "cms" : "verified_fallback",
     },
   };
 }

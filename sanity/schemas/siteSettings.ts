@@ -54,7 +54,16 @@ export const siteSettings = defineType({
       name: "officialEmail",
       title: "Email Resmi Bisnis",
       type: "string",
+      description: "Alamat email resmi untuk korespondensi B2B (contoh: info@abutas.com).",
       initialValue: "info@abutas.com",
+      validation: (Rule) =>
+        Rule.custom((val: unknown) => {
+          if (!val) return true;
+          if (typeof val !== "string") return "Format email tidak valid.";
+          return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)
+            ? true
+            : "Format email tidak valid (contoh: info@abutas.com).";
+        }),
     }),
     defineField({
       name: "emailVerified",

@@ -20,10 +20,11 @@ export const BUSINESS_CONFIG = {
     verified: true,
   },
 
-  // Official Email Mailbox (Prepared for cPanel activation)
+  // Official Verified Email Mailbox (Confirmed created in cPanel Superserver 2026-11-03)
   email: {
     address: "info@abutas.com",
-    verified: false,
+    mailtoUrl: "mailto:info@abutas.com",
+    verified: true,
   },
 } as const;
 
@@ -39,6 +40,14 @@ export function formatWhatsAppDisplay(numeric: string): string {
     return `+62 ${part1}-${part2}-${part3}`;
   }
   return digits.startsWith("+") ? digits : `+${digits}`;
+}
+
+/**
+ * Helper to generate official RFQ mailto link with pre-filled subject and body.
+ */
+export function getEmailRfqUrl(summary: string, recipient: string = BUSINESS_CONFIG.email.address): string {
+  const subject = "Permintaan Penawaran (RFQ) Konveksi Custom — ABUTAS";
+  return `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(summary)}`;
 }
 
 /**
